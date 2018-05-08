@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Search
 {
     public class FindElementsResult<T>
     {

@@ -1,4 +1,4 @@
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Search
 {
     /// <summary>
     /// Свойства элементов (указываются в поле «propName» и «sortType»)

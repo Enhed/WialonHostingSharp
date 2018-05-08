@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using WialonHostingSharp;
+using WialonHostingSharp.Search;
 
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Search
 {
     public sealed class SearchSpector
     {

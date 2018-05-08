@@ -1,7 +1,8 @@
 using Newtonsoft.Json;
-using WialonHostingSharp;
+using WialonHostingSharp.Http;
+using WialonHostingSharp.Search;
 
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Search
 {
     public class FindElementsParams : RequestParams
     {

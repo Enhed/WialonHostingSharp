@@ -1,4 +1,4 @@
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Search
 {
     /// <summary>
     /// Типы элементов системы Wialon (указываются в поле «itemsType»)

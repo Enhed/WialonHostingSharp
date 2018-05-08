@@ -1,4 +1,4 @@
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Search
 {
     /// <summary>
     /// Типы свойств (указываются в поле «propType»)

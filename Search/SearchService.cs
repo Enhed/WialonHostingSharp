@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using WialonHostingSharp;
+using WialonHostingSharp.Search;
 
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Search
 {
     public sealed class SearchService
     {

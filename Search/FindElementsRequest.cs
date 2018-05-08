@@ -1,6 +1,7 @@
-using WialonHostingSharp;
+using WialonHostingSharp.Http;
+using WialonHostingSharp.Search;
 
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Search
 {
     public sealed class FindElementsRequest<T> : Request<FindElementsResult<T>>
         where T : Unit
