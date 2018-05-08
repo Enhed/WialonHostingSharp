@@ -19,10 +19,10 @@ namespace WialonHostingSharp.Messages
         public DateTime EndDate;
 
         [JsonProperty("flags")]
-        public long DataMask;
+        public long Flags;
 
         [JsonProperty("flagsMask")]
-        public long DataType;
+        public long Mask;
 
         [JsonProperty("loadCount")]
         public long Count = 0xffffffff;
