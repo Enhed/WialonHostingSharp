@@ -56,7 +56,7 @@ private async void DisplayDataMessages()
     const string host = "host";
 
     // create current session
-    var session = await SessionManager.Login(BifHost, BifToken);
+    var session = await SessionManager.Login(host, token);
 
     // object id
     var id = 000;
