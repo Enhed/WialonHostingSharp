@@ -31,14 +31,6 @@ namespace WialonHostingSharp.Http
                     using(var reader = new StreamReader(stream))
                     {
                         var text = await reader.ReadToEndAsync();
-
-#if DEBUG
-                        Console.WriteLine("----------------");
-                        Console.WriteLine("-------SOURCE RESPONSE:-------");
-                        Console.WriteLine(text);
-                        Console.WriteLine("----------------");
-#endif
-
                         return Convert(text);
                     }
                 }
