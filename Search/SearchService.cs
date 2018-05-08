@@ -12,43 +12,50 @@ namespace WialonHostingSharp.Search
             this.session = session;
         }
 
-        public async Task<WlnObject[]> GetObjects(string mask = "*", string propName = "sys_name", long flags = 1)
+        public async Task<T[]> GetUnits<T>(SearchSpector searchSpector, uint force, long flags,
+            uint from, uint to)
+            where T : Unit
+        {
+            var param = new FindElementsParams
+            {
+                Spector = searchSpector,
+                Force = force,
+                Flags = flags,
+                From = from,
+                To = to
+            };
+
+            var req = new FindElementsRequest<T>(session, param);
+            var result = await req.GetResponse();
+            return result.Items;
+        }
+
+        public Task<WlnObject[]> GetObjects(string mask = "*",
+            PropertyElement propName = PropertyElement.sys_name, long flags = 1,
+            uint force = 1, uint from = 0, uint to = 0)
         {
             var ss = new SearchSpector
             {
-                PropertyName = propName,
+                ItemType = ItemType.avl_unit,
+                PropertyName = propName.ToString(),
                 Mask = mask
             };
 
-            var fer = new FindElementsParams
-            {
-                Spector = ss,
-                Flags = flags
-            };
-
-            var req = new FindElementsRequest<WlnObject>(session, fer);
-            var resp = await req.GetResponse();
-            return resp.Items;
+            return GetUnits<WlnObject>(ss, force, flags, from, to);
         }
 
-        public async Task<GroupObjects[]> GetGroupObjects(string mask = "*", string propName = "sys_name", long flags = 1)
+        public Task<GroupObjects[]> GetGroupObjects(string mask = "*",
+            PropertyElement propName = PropertyElement.sys_name, long flags = 1,
+            uint force = 1, uint from = 0, uint to = 0)
         {
             var ss = new SearchSpector
             {
                 ItemType = ItemType.avl_unit_group,
-                PropertyName = propName,
+                PropertyName = propName.ToString(),
                 Mask = mask
             };
 
-            var fer = new FindElementsParams
-            {
-                Spector = ss,
-                Flags = flags
-            };
-
-            var req = new FindElementsRequest<GroupObjects>(session, fer);
-            var resp = await req.GetResponse();
-            return resp.Items;
+            return GetUnits<GroupObjects>(ss, force, flags, from, to);
         }
     }
 

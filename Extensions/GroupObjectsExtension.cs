@@ -8,7 +8,7 @@ namespace WialonHostingSharp.Extensions
         public static Task<WlnObject[]> GetObjects(this GroupObjects obj, SearchService ss)
         {
             if(obj.ObjectIds?.Length == null) return null;
-            return ss.GetObjects(string.Join(",",obj.ObjectIds), PropertyElement.sys_id.ToString());
+            return ss.GetObjects(string.Join(",",obj.ObjectIds), PropertyElement.sys_id);
         }
     }
 }
