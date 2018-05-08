@@ -13,6 +13,10 @@ First of all, install `WialonHostingSharp` into your project using a NuGet clien
 
 ```c#
 
+using System;
+using WialonHostingSharp;
+using WialonHostingSharp.Search;
+
 async void DisplayObjects()
 {
     const string token = "token";
