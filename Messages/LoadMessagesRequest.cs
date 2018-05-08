@@ -6,7 +6,7 @@ namespace WialonHostingSharp.Messages
     public sealed class LoadMessagesRequest<T> : Request<LoadMessageResult<T>>
         where T : Message
     {
-        public LoadMessagesRequest(Connection connection, RequestParams parameters)
+        public LoadMessagesRequest(Session connection, RequestParams parameters)
             : base(connection, parameters)
         {
         }
