@@ -13,8 +13,15 @@ namespace WialonHostingSharp.Messages
             this.session = session;
         }
 
-        public async Task<DataMessage[]> GetDataMessages(int id, DateTime begin, DateTime end,
-            long count = 0xffffffff, long flags = 0)
+        public Task<DataMessage[]> GetDataMessages(int id, DateTime begin, DateTime end,
+            long count = 0xffffffff, long flags = 0, long mask = 0)
+        {
+            return GetMessages<DataMessage>(id, begin, end, count, flags, mask);
+        }
+
+        public async Task<T[]> GetMessages<T>(int id, DateTime begin, DateTime end,
+            long count = 0xffffffff, long flags = 0, long mask = 0)
+            where T : Message
         {
             var param = new LoadMessagesParams
             {
@@ -22,10 +29,11 @@ namespace WialonHostingSharp.Messages
                 Flags = flags,
                 BeginDate = begin,
                 EndDate = end,
-                Count = count
+                Count = count,
+                Mask = mask
             };
 
-            var req = new LoadMessagesRequest<DataMessage>(session, param);
+            var req = new LoadMessagesRequest<T>(session, param);
             var result = await req.GetResponse();
             return result.Messages;
         }
