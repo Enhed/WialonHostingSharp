@@ -1,4 +1,6 @@
-namespace WialonHostingSharp
+using WialonHostingSharp.Http;
+
+namespace WialonHostingSharp.Auth
 {
     public sealed class LoginRequest : Request<LoginResponse>
     {

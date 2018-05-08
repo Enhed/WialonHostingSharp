@@ -1,4 +1,4 @@
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Auth
 {
     public enum LoginFlags : uint
     {

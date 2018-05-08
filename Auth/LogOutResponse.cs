@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Auth
 {
     internal sealed class LogOutResponse
     {

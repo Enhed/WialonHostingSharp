@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Auth
 {
     public sealed class LoginResponse
     {
