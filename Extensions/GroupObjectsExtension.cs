@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using WialonHostingSharp.Search;
 
-namespace WialonHostingSharp.Search
+namespace WialonHostingSharp.Extensions
 {
     public static class GroupObjectsExtension
     {
