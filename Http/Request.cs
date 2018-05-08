@@ -2,8 +2,9 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.IO;
 using System.Net;
+using System;
 
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Http
 {
     public abstract class Request<T>
     {
@@ -30,6 +31,14 @@ namespace WialonHostingSharp
                     using(var reader = new StreamReader(stream))
                     {
                         var text = await reader.ReadToEndAsync();
+
+#if DEBUG
+                        Console.WriteLine("----------------");
+                        Console.WriteLine("-------SOURCE RESPONSE:-------");
+                        Console.WriteLine(text);
+                        Console.WriteLine("----------------");
+#endif
+
                         return Convert(text);
                     }
                 }

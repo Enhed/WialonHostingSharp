@@ -1,4 +1,4 @@
-namespace WialonHostingSharp
+namespace WialonHostingSharp.Http
 {
     public class RequestParams
     {
