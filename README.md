@@ -65,7 +65,7 @@ private async void DisplayDataMessages()
     var ms = new MessageService(session);
 
     // load 3 messages
-    var messages = await ms.GetMessageDatas(id, DateTime.Today, DateTime.Now, 3);
+    var messages = await ms.GetDataMessages(id, DateTime.Today, DateTime.Now, 3);
 
     Console.WriteLine($"Get x{messages.Length} messages");
 

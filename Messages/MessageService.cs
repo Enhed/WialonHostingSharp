@@ -13,7 +13,7 @@ namespace WialonHostingSharp.Messages
             this.session = session;
         }
 
-        public async Task<MessageData[]> GetMessageDatas(int id, DateTime begin, DateTime end,
+        public async Task<DataMessage[]> GetDataMessages(int id, DateTime begin, DateTime end,
             long count = 0xffffffff, long flags = 0)
         {
             var param = new LoadMessagesParams
@@ -25,7 +25,7 @@ namespace WialonHostingSharp.Messages
                 Count = count
             };
 
-            var req = new LoadMessagesRequest<MessageData>(session, param);
+            var req = new LoadMessagesRequest<DataMessage>(session, param);
             var result = await req.GetResponse();
             return result.Messages;
         }

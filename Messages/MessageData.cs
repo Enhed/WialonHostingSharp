@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace WialonHostingSharp.Messages
 {
-    public sealed class MessageData : Message
+    public sealed class DataMessage : Message
     {
         [JsonProperty("pos")]
         public Position Position;
