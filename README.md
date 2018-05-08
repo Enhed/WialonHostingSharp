@@ -45,3 +45,36 @@ async void DisplayObjects()
 }
 
 ```
+
+### Display data messages
+
+```c#
+
+private async void DisplayDataMessages()
+{
+    const string token = "token";
+    const string host = "host";
+
+    // create current session
+    var session = await SessionManager.Login(BifHost, BifToken);
+
+    // object id
+    var id = 000;
+
+    // create message service
+    var ms = new MessageService(session);
+
+    // load 3 messages
+    var messages = await ms.GetMessageDatas(id, DateTime.Today, DateTime.Now, 3);
+
+    Console.WriteLine($"Get x{messages.Length} messages");
+
+    foreach(var msg in messages)
+    {
+        Console.WriteLine($"\t{msg.Time}: {msg.Position}");
+    }
+
+    await SessionManager.Logout(session);
+}
+
+```
