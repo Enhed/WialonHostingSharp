@@ -8,7 +8,10 @@ namespace WialonHostingSharp.Messages
     {
         [JsonConverter(typeof(UnixDateTimeConverter))]
         [JsonProperty("t")]
-        public DateTime Time;
+        public DateTime UtcTime;
+
+        [JsonIgnore]
+        public DateTime LocalTime => UtcTime.ToLocalTime();
 
         [JsonProperty("f")]
         public uint Flags;
