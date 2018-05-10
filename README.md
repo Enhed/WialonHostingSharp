@@ -71,7 +71,7 @@ private async void DisplayDataMessages()
 
     foreach(var msg in messages)
     {
-        Console.WriteLine($"\t{msg.Time}: {msg.Position}");
+        Console.WriteLine($"\t{msg.LocalTime}: {msg.Position}");
     }
 
     await SessionManager.Logout(session);
