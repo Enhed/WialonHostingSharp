@@ -4,7 +4,7 @@ namespace WialonHostingSharp.Search
 {
     public class Unit
     {
-        [JsonProperty("nm")]
+        [JsonProperty("nm", NullValueHandling = NullValueHandling.Ignore)]
         public string Name;
 
         [JsonProperty("id")]
