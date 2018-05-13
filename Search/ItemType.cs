@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace WialonHostingSharp.Search
 {
     /// <summary>
@@ -8,31 +10,37 @@ namespace WialonHostingSharp.Search
         /// <summary>
         /// ресурс
         /// </summary>
-        avl_resource,
+        [EnumMember(Value = "avl_resource")]
+        Resource,
 
         /// <summary>
         /// ретранслятор
         /// </summary>
-        avl_retranslator,
+        [EnumMember(Value = "avl_retranslator")]
+        Retranslator,
 
         /// <summary>
         /// объект
         /// </summary>
-        avl_unit,
+        [EnumMember(Value = "avl_unit")]
+        Object,
 
         /// <summary>
         /// группа объектов
         /// </summary>
-        avl_unit_group,
+        [EnumMember(Value = "avl_unit_group")]
+        GroupObjects,
 
         /// <summary>
         /// пользователь
         /// </summary>
-        user,
+        [EnumMember(Value = "user")]
+        User,
 
         /// <summary>
         /// маршрут
         /// </summary>
-        avl_route
+        [EnumMember(Value = "avl_route")]
+        Route
     }
 }

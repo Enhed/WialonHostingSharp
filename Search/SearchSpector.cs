@@ -8,7 +8,7 @@ namespace WialonHostingSharp.Search
     {
         [JsonConverter(typeof(StringEnumConverter))]
         [JsonProperty("itemsType")]
-        public ItemType ItemType = ItemType.avl_unit;
+        public ItemType ItemType = ItemType.Object;
 
         [JsonProperty("propName")]
         public string PropertyName = PropertyElement.sys_name.ToString();

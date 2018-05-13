@@ -36,7 +36,7 @@ namespace WialonHostingSharp.Search
         {
             var ss = new SearchSpector
             {
-                ItemType = ItemType.avl_unit,
+                ItemType = ItemType.Object,
                 PropertyName = propName.ToString(),
                 Mask = mask
             };
@@ -50,7 +50,7 @@ namespace WialonHostingSharp.Search
         {
             var ss = new SearchSpector
             {
-                ItemType = ItemType.avl_unit_group,
+                ItemType = ItemType.GroupObjects,
                 PropertyName = propName.ToString(),
                 Mask = mask
             };
