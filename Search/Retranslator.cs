@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 using WialonHostingSharp.Search;
 
@@ -8,14 +9,11 @@ namespace WialonHostingSharp.Search
         [JsonProperty("rtru", NullValueHandling = NullValueHandling.Ignore)]
         public Object[] Objects;
 
-        [JsonProperty("rtro")]
-        public int State;
+        [JsonProperty("rtro", NullValueHandling = NullValueHandling.Ignore)]
+        public int? State;
 
-        [JsonProperty("rtrc")]
+        [JsonProperty("rtrc", NullValueHandling = NullValueHandling.Ignore)]
         public Configuration Config;
-
-        [JsonIgnore]
-        public bool Enabled => State == 1;
 
 #region types
 
@@ -46,10 +44,10 @@ namespace WialonHostingSharp.Search
             public string Auth;
 
             [JsonProperty("ssl")]
-            public int StateSsl;
+            public int? Ssl;
 
             [JsonProperty("v6type")]
-            public int StateV6Type;
+            public int? V6Type;
 
             [JsonProperty("login")]
             public string Login;
@@ -58,16 +56,7 @@ namespace WialonHostingSharp.Search
             public string Password;
 
             [JsonProperty("notauth")]
-            public int StateNotAuth;
-
-            [JsonIgnore]
-            public bool Ssl => StateSsl == 1;
-
-            [JsonIgnore]
-            public bool V6Type => StateV6Type == 1;
-
-            [JsonIgnore]
-            public bool NotAuth => StateNotAuth == 1;
+            public int? NotAuth;
         }
 
         public sealed class Object
