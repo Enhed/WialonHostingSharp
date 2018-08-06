@@ -33,5 +33,12 @@ namespace WialonHostingSharp
 
             return GenerateUrl( m, p );
         }
+
+        public virtual string GenerateUrl( string method )
+        {
+            var m = ( METHOD_NAME, method );
+
+            return GenerateUrl(m);
+        }
     }
 }
