@@ -135,6 +135,17 @@ namespace WialonHostingSharp.Search
         {
             return GetDataMessages(new MessageService(session), begin);
         }
+
+        public async Task Rename(Session session, string name)
+        {
+            var result = await new ItemUpdateNameRequest
+            (
+                session,
+                new ItemUpdateNameRequest.Params { Id = Id, Name = name }
+            ).GetResponse();
+
+            if(result.Name != name) throw new Exception($"Cannot change name [{Name}] => [{name}] on id [{Id}]. Response: {result}");
+        }
     }
 
     public class Sensor : ICloneable
