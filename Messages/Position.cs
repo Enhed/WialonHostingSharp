@@ -11,13 +11,16 @@ namespace WialonHostingSharp.Messages
         public double Longitude;
 
         [JsonProperty("z")]
-        public int Altitude;
+        public double Altitude;
 
         [JsonProperty("s")]
         public uint Speed;
 
         [JsonProperty("c")]
         public uint Course;
+
+        [JsonIgnore]
+        public bool IsValid => Latitude > 0 && Longitude > 0;
 
         [JsonProperty("sc")]
         public byte SatelliteCount;
