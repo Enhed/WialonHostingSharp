@@ -67,7 +67,7 @@ namespace WialonHostingSharp.Http
         public sealed class ItemUpdateNameRequest : Request<ItemUpdateNameRequest.Response>
     {
         public ItemUpdateNameRequest(Session connection,
-            RequestParams parameters) : base(connection, parameters)
+            Params parameters) : base(connection, parameters)
         {
         }
 
