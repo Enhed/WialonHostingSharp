@@ -8,7 +8,7 @@ namespace WialonHostingSharp.Search
         public string Name;
 
         [JsonProperty("id")]
-        public uint Id;
+        public int Id;
     }
 
 }
