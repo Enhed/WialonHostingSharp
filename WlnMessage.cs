@@ -45,7 +45,8 @@ namespace WialonHostingSharp
 
         public WlnMessage(string sourceMessage)
         {
-            sourceArray = sourceMessage.Split(BlockSeparator);
+            sourceArray = sourceMessage.Split(new string[] { BlockSeparator },
+                StringSplitOptions.None);
         }
 
         public Position Position
@@ -104,8 +105,8 @@ namespace WialonHostingSharp
         public IEnumerable<(string name, string value)> SystemData => GetSplittedValues(sourceArray[SystemDataIndex]);
 
         private IEnumerable<(string name, string value)> GetSplittedValues(string data)
-            => data?.Split(DataSeparator, StringSplitOptions.RemoveEmptyEntries)
-                .Select(str => str.Split(ValueSeparator, StringSplitOptions.RemoveEmptyEntries))
+            => data?.Split(new string[] {DataSeparator}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(str => str.Split(new string[] {ValueSeparator}, StringSplitOptions.RemoveEmptyEntries))
                 .Select(ar => (ar[0], ar[1]));
 
         public string GetDataValue(string name)
