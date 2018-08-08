@@ -160,25 +160,16 @@ namespace WialonHostingSharp.Search
             );
         }
 
-        public async Task<WlnObject[]> GetObjects(Session session, long flags = 1, SearchService search = null,
-            bool splitLoad = false)
+        public async Task<WlnObject[]> GetObjects(Session session, long flags = 1)
         {
-            var ss = search ?? new SearchService(session);
+            var ss = new SearchService(session);
 
-            var dict = await GetUnitsAccess(session);
-            var ids = dict.Select(x => x.Key);
+            var mask = (await GetUnitsAccess(session))
+                ?.Keys?.Cast<string>().Join(",");
 
-            return await ids.Select( async id => await ss.GetObjectById(id, flags) )
-                    .GetAsync(ar => Task.WhenAll(ar));
+            if(mask?.Length == 0) return null;
 
-            // if(splitLoad)
-                
-            
-            // else
-            // {
-            //     var mask = ids.Select(x => x.ToString()).Get(ar => string.Join(ar, ","));
-            //     return await ss.GetObjects(string.Join(ids.Select(x => x.ToString()), PropertyElement.sys_id, flags);
-            // }
+            return await ss.GetObjects(mask, PropertyElement.sys_id, flags);
         }
     }
 
@@ -203,7 +194,7 @@ namespace WialonHostingSharp.Search
             public ItemType ItemSuperclass = ItemType.Object;
 
             [JsonProperty("flags")]
-            public uint Flags = 0x1;
+            public uint Flags;// = 0x1;
         }
 
         public override string Method => "user/get_items_access";
