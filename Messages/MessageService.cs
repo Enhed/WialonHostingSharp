@@ -80,11 +80,6 @@ namespace WialonHostingSharp.Messages
             }
         }
 
-        public async Task Replace(int index, Message msg)
-        {
-            
-        }
-
         public async Task Delete(int id, DateTime begin, DateTime end, int maxIter = 10)
         {
             var messages = await GetDataMessages(id, begin, end);
