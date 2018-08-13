@@ -22,5 +22,8 @@ namespace WialonHostingSharp
             var ltReq = new LogOutRequest(session);
             return ltReq.GetResponse();
         }
+
+        public static Task<Session> Login( this ( string host, string token ) data, bool ssl = false )
+            => Login(data.host, data.token, ssl );
     }
 }
