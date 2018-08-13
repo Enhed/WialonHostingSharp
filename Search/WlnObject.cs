@@ -16,6 +16,9 @@ namespace WialonHostingSharp.Search
     {
         private static ProtocolInfo[] protocols;
 
+        [JsonIgnore]
+        public Session Session;
+
         [JsonProperty("uacl")]
         public string UserAccessLevel;
 
@@ -44,6 +47,35 @@ namespace WialonHostingSharp.Search
         public Dictionary<string, Sensor> SensorsDictionary;
 
         public Sensor[] Sensors => SensorsDictionary?.Values?.ToArray();
+
+        [JsonIgnore]
+        public IEnumerable<Sensor> FuelSensors => Sensors?.Where(s => s.SensorType == Sensor.Type.FuelLevel);
+
+        [JsonIgnore]
+
+        public Task<FuelSetting> FuelSetting => GetFuelSetting(Session);
+
+        [JsonIgnore]
+        public Task<TripDetector> TripDetector => GetTripDetector(Session);
+
+        public Task<TripDetector> GetTripDetector(Session session)
+        {
+            return new GetTripDetectorRequest
+            (
+                session,
+                new GetTripDetectorRequest.Params { Id = Id }
+            ).GetResponse();
+        }
+
+        public Task<bool> UpdateTripDetector(Session session, TripDetector detector)
+        {
+            return new UpdateTripDetectorRequest(session, Id, detector).GetResponse();
+        }
+
+        public Task<bool> UpdateTripDetector(TripDetector detector)
+        {
+            return new UpdateTripDetectorRequest(Session, Id, detector).GetResponse();
+        }
 
         public Task<UpdateDeviceTypeRequest.Response> UpdateDevice(Session session, UpdateDeviceTypeRequest.Params parameters)
         {
@@ -80,6 +112,27 @@ namespace WialonHostingSharp.Search
             );
 
             return req.GetResponse();
+        }
+
+        public Task<FuelSetting> GetFuelSetting(Session session)
+        {
+            return new GetFuelSettingRequest
+            (
+                session,
+                new GetFuelSettingRequest.Params { Id = Id }
+            ).GetResponse();
+        }
+
+        public Task<bool> UpdateFuelLevelParams(Session session, FuelLevelParams levelParams)
+        {
+            return new UpdateFuelLevelParams(session, Id,levelParams).GetResponse();
+        }
+
+        public async Task<bool> UpdateFuelLevelParams(Session session, Action<FuelLevelParams> updater)
+        {
+            var fset = await GetFuelSetting(session);
+            updater(fset.FuelLevelParams);
+            return await UpdateFuelLevelParams(session, fset.FuelLevelParams);
         }
 
         public Task<UpdateDeviceTypeRequest.Response> ChangeDevice(Session session, long device)
