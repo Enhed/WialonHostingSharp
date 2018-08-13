@@ -14,8 +14,8 @@ namespace WialonHostingSharp
         private const int RequireLen = 11;
 
         private const int DateIndex = 1;
-        private const int LatitudeIndex = 2;
-        private const int LongitudeIndex = 3;
+        private const int LongitudeIndex = 2;
+        private const int LatitudeIndex = 3;
         private const int SpeedIndex = 4;
         private const int CourseIndex = 5;
         private const int DataIndex = 6;
