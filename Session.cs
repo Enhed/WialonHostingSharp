@@ -1,3 +1,6 @@
+using System;
+using System.Threading.Tasks;
+
 namespace WialonHostingSharp
 {
     public class Session : Connection
@@ -17,6 +20,11 @@ namespace WialonHostingSharp
             var s = ( SID_NAME, Id );
 
             return GenerateUrl( m, s, p );
+        }
+
+        public Task Logout()
+        {
+            return SessionManager.Logout(this);
         }
     }
 }
