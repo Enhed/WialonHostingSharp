@@ -38,7 +38,12 @@ namespace WialonHostingSharp.Search
             return result.Items;
         }
 
-        public Task<WlnObject[]> GetObjects(string mask = "*",
+        public Task<Retranslator> GetRetranslatorById(int retranslatorId, long flags = 1)
+        {
+            return GetRetranslator(retranslatorId.ToString(), PropertyElement.sys_id, flags);
+        }
+
+        public async Task<WlnObject[]> GetObjects(string mask = "*",
             PropertyElement propName = PropertyElement.sys_name, long flags = 1,
             uint force = 1, uint from = 0, uint to = 0)
         {
@@ -49,12 +54,14 @@ namespace WialonHostingSharp.Search
                 Mask = mask
             };
 
-            return GetUnits<WlnObject>(ss, force, flags, from, to);
+            return (await GetUnits<WlnObject>(ss, force, flags, from, to))
+                .Each(o => o.Session = session).ToArray();
         }
 
-        public Task<WlnObject[]> GetObjects(long flags = 1, uint force = 1, uint from = 0, uint to = 0)
+        public async Task<WlnObject[]> GetObjects(long flags = 1, uint force = 1, uint from = 0, uint to = 0)
         {
-            return GetObjects("*", PropertyElement.sys_name, flags, force, from, to);
+            return (await GetObjects("*", PropertyElement.sys_name, flags, force, from, to))
+                .Each(o => o.Session = session).ToArray();
         }
 
         public async Task<WlnObject> GetObject(string mask = "*",
@@ -65,7 +72,15 @@ namespace WialonHostingSharp.Search
 
             return objs?.Length != 1
                 ? throw new AggregateException($"Mask [{mask}] get x{objs?.Length ?? -1} elements")
-                : objs[0];
+                : objs[0].Do(o => o.Session = session);
+        }
+
+        public async Task<Retranslator> GetRetranslator(string mask = "*",
+            PropertyElement propName = PropertyElement.sys_name, long flags = 1,
+            uint force = 1, uint from = 0, uint to = 0)
+        {
+            return (await GetRetranslators(mask, propName, flags, force, from, to))
+                .SingleOrDefault();
         }
 
         public Task<WlnObject> GetObjectByUid(string uid, long flags = 1)
@@ -142,12 +157,12 @@ namespace WialonHostingSharp.Search
 
     public sealed class User : Unit
     {
-        public Task<Dictionary<long, long>> GetUnitsAccess(Session session, UnitAccessRequest.Params param)
+        public Task<Dictionary<long, UnitAccess>> GetUnitsAccess(Session session, UnitAccessRequest.Params param)
         {
             return new UnitAccessRequest(session, param).GetResponse();
         }
 
-        public Task<Dictionary<long, long>> GetUnitsAccess(Session session, ItemType type = ItemType.Object)
+        public Task<Dictionary<long, UnitAccess>> GetUnitsAccess(Session session, ItemType type = ItemType.Object)
         {
             return GetUnitsAccess
             (
@@ -165,7 +180,7 @@ namespace WialonHostingSharp.Search
             var ss = new SearchService(session);
 
             var mask = (await GetUnitsAccess(session))
-                ?.Keys?.Cast<string>().Join(",");
+                ?.Keys?.Select(x => x.ToString()).Join(",");
 
             if(mask?.Length == 0) return null;
 
@@ -173,13 +188,11 @@ namespace WialonHostingSharp.Search
         }
     }
 
-    public sealed class UnitAccessRequest : Request<Dictionary<long, long>>
+    public sealed class UnitAccessRequest : Request<Dictionary<long, UnitAccess>>
     {
         public UnitAccessRequest(Session connection, Params parameters) : base(connection, parameters)
         {
         }
-
-        // protected override (long id, ) Convert(string source) // todo: вернуть туплы
 
         public sealed class Params : RequestParams
         {
@@ -187,16 +200,26 @@ namespace WialonHostingSharp.Search
             public long UserId;
 
             [JsonProperty("directAccess")]
-            public bool DirectAccess = true;
+            [JsonConverter(typeof(NumberBoolConverter))]
+            public bool DirectAccess;
 
             [JsonProperty("itemSuperclass")]
             [JsonConverter(typeof(StringEnumConverter))]
             public ItemType ItemSuperclass = ItemType.Object;
 
             [JsonProperty("flags")]
-            public uint Flags;// = 0x1;
+            public uint Flags = 0x1;
         }
 
         public override string Method => "user/get_items_access";
+    }
+
+    public sealed class UnitAccess
+    {
+        [JsonProperty("cacl")]
+        public long Combine;
+
+        [JsonProperty("dacl")]
+        public long Direct;
     }
 }
