@@ -98,7 +98,7 @@ namespace WialonHostingSharp.Http
 
     public sealed class UpdateDeviceTypeRequest : Request<UpdateDeviceTypeRequest.Response>
     {
-        public UpdateDeviceTypeRequest(Session connection, RequestParams parameters) : base(connection, parameters)
+        public UpdateDeviceTypeRequest(Session connection, Params parameters) : base(connection, parameters)
         {
         }
 
@@ -159,10 +159,10 @@ namespace WialonHostingSharp.Http
         public uint Flags;
     }
 
-    public sealed class UpdateObjectsRequest : Request<Retranslator>
+    public sealed class RetranslatorUpdateObjectsRequest : Request<Retranslator>
     {
 
-        public UpdateObjectsRequest(Session connection, Params parameters)
+        public RetranslatorUpdateObjectsRequest(Session connection, Params parameters)
             : base(connection, parameters)
         {
         }
@@ -250,22 +250,21 @@ namespace WialonHostingSharp.Http
         public string UDP;
     }
 
-    public sealed class ImportMessageRequest : Request<ImportMessageResponse>
+    public sealed class ImportMessageRequest : Request<string>
     {
-        public ImportMessageRequest(Session session, Params parameters, Stream dataStream, bool autoCloseStream = true)
+        public ImportMessageRequest(Session session, Params parameters, Stream dataStream)
             : base(session, parameters)
         {
-            this.dataStream = dataStream;
-            this.autoCloseStream = autoCloseStream;
+            this.dataStream = new MemoryStream();
+            dataStream.CopyTo(this.dataStream);
         }
 
         private readonly Stream dataStream;
-        private readonly bool autoCloseStream;
 
         public override string Method => "exchange/import_messages";
         protected override string HttpMethod => "POST";
 
-        public override async Task<ImportMessageResponse> GetResponse()
+        public override async Task<string> GetResponse()
         {
             var client = new HttpClient();
             var url = FullUrl;
@@ -287,10 +286,13 @@ namespace WialonHostingSharp.Http
 
             using(client)
             {
-                return (await(await client.PostAsync(url, multipart))
-                    .Content.ReadAsStringAsync()).Get(Convert);
+                var response = await client.PostAsync(url, multipart);
+                dataStream.Close();
+                return await response.Content.ReadAsStringAsync();
             }
         }
+
+        protected override string Convert(string source) => source;
 
         public sealed class Params : RequestParams
         {
@@ -447,5 +449,230 @@ namespace WialonHostingSharp.Http
 
         [EnumMember(Value="wlb")]
         Wlb
+    }
+
+    public sealed class GetFuelSettingRequest : Request<FuelSetting>
+    {
+        public GetFuelSettingRequest(Session connection, Params parameters)
+            : base(connection, parameters)
+        {
+        }
+
+        public override string Method => "unit/get_fuel_settings";
+
+        public sealed class Params : RequestParams
+        {
+            [JsonProperty("itemId")]
+            public long Id;
+        }
+    }
+
+    public class FuelSetting
+    {
+        [JsonProperty("calcTypes")]
+        public CalculateTypes CalcTypes;
+
+        [JsonProperty("fuelLevelParams")]
+        public FuelLevelParams FuelLevelParams;
+
+        public enum CalculateTypes : uint
+        {
+            None,
+
+            /// <summary>
+            /// расход по расчету
+            /// </summary>
+            ConsumptionByCalculation,
+            FuelLevelSensors,
+
+            /// <summary>
+            /// заменять ошибочные значения датчиков уровня топлива рассчитанными математически
+            /// </summary>
+            ErrorCalculatesMath,
+            AbsoluteFuelSensors,
+            ImpulseSensors,
+
+            /// <summary>
+            /// датчики мгновенного расхода топлива
+            /// </summary>
+            InstantaneousFuelConsumptionSensors,
+
+            /// <summary>
+            /// расход по нормам
+            /// </summary>
+            ConsumptionByRate
+        }
+    }
+
+    public class FuelLevelParams
+    {
+        [JsonProperty("flags")]
+        public uint Flags;
+
+        [JsonProperty("ignoreStayTimeout")]
+        public uint IgnoreStayTimeout;
+
+        [JsonProperty("minFillingVolume")]
+        public double MinFillingVolume;
+
+        [JsonProperty("minTheftTimeout")]
+        public uint MinTheftTimeout;
+
+        [JsonProperty("minTheftVolume")]
+        public double MinTheftVolume;
+
+        [JsonProperty("filterQuality")]
+        public byte FilterQuality;
+
+        [JsonProperty("fillingsJoinInterval")]
+        public uint FillingsJoinInterval;
+
+        [JsonProperty("theftsJoinInterval")]
+        public uint TheftsJoinInterval;
+
+        [JsonProperty("extraFillingTimeout")]
+        public uint ExtraFillingTimeout;
+    }
+
+    public sealed class UpdateFuelLevelParams : Request<bool>
+    {
+        private Session session;
+
+        public UpdateFuelLevelParams(Session connection, Params parameters)
+            : base(connection, parameters)
+        {
+        }
+
+        public UpdateFuelLevelParams(Session session, long id, FuelLevelParams levelParams)
+            : base(session, Params.Create(id, levelParams))
+        {
+        }
+
+        public override string Method => "unit/update_fuel_level_params";
+
+        protected override bool Convert(string source)
+        {
+            return source.Trim() == "{}";
+        }
+
+        public sealed class Params : FuelLevelParams, IRequestParams
+        {
+            [JsonProperty("itemId")]
+            public long Id;
+
+            public static Params Create(long id, FuelLevelParams source)
+            {
+                return new Params
+                {
+                    Id = id,
+                    ExtraFillingTimeout = source.ExtraFillingTimeout,
+                    FillingsJoinInterval = source.FillingsJoinInterval,
+                    FilterQuality = source.FilterQuality,
+                    Flags = source.Flags,
+                    IgnoreStayTimeout = source.IgnoreStayTimeout,
+                    MinFillingVolume = source.MinFillingVolume,
+                    MinTheftTimeout = source.MinTheftTimeout,
+                    MinTheftVolume = source.MinTheftVolume,
+                    TheftsJoinInterval = source.TheftsJoinInterval
+                };
+            }
+        }
+    }
+
+    public sealed class GetTripDetectorRequest : Request<TripDetector>
+    {
+        public GetTripDetectorRequest(Session connection, Params parameters)
+            : base(connection, parameters)
+        {
+        }
+
+        public GetTripDetectorRequest(Session connection, long id)
+            : base(connection, new Params { Id = id })
+        {
+        }
+
+        public override string Method => "unit/get_trip_detector";
+
+        public sealed class Params : RequestParams
+        {
+            [JsonProperty("itemId")]
+            public long Id;
+        }
+    }
+
+    public sealed class UpdateTripDetectorRequest : Request<bool>
+    {
+        public UpdateTripDetectorRequest(Connection connection, Params parameters)
+            : base(connection, parameters)
+        {
+        }
+
+        public UpdateTripDetectorRequest(Connection connection, long id, TripDetector detector)
+            : base(connection, Params.Create(id, detector))
+        {
+        }
+
+        public override string Method => "unit/update_trip_detector";
+
+        protected override bool Convert(string source) => source.Trim() == "{}";
+
+        public sealed class Params : TripDetector, IRequestParams
+        {
+            [JsonProperty("itemId")]
+            public long Id;
+
+            public static Params Create(long id, TripDetector detector)
+            {
+                return new Params
+                {
+                    Id = id,
+                    GpsCorrection = detector.GpsCorrection,
+                    MaxMessagesMetters = detector.MaxMessagesMetters,
+                    MinMovingSpeed = detector.MinMovingSpeed,
+                    MinSat = detector.MinSat,
+                    MinStaySeconds = detector.MinStaySeconds,
+                    MinTripMetters = detector.MinTripMetters,
+                    MinTripSeconds = detector.MinTripSeconds,
+                    Type = detector.Type
+                };
+            }
+        }
+    }
+
+    public class TripDetector
+    {
+        [JsonProperty("type")]
+        public TypeDetector Type;
+
+        [JsonProperty("gpsCorrection")]
+        [JsonConverter(typeof(NumberBoolConverter))]
+        public bool GpsCorrection;
+
+        [JsonProperty("minSat")]
+        public uint MinSat;
+
+        [JsonProperty("minMovingSpeed")]
+        public uint MinMovingSpeed;
+
+        [JsonProperty("minStayTime")]
+        public uint MinStaySeconds;
+
+        [JsonProperty("maxMessagesDistance")]
+        public uint MaxMessagesMetters;
+
+        [JsonProperty("minTripTime")]
+        public uint MinTripSeconds;
+
+        [JsonProperty("minTripDistance")]
+        public uint MinTripMetters;
+
+        public enum TypeDetector : uint
+        {
+            Speed = 1,
+            Position,
+            IgnitionSensor,
+            MileageSensor,
+            RelativeOdometer
+        }
     }
 }
