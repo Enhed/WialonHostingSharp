@@ -43,6 +43,11 @@ namespace WialonHostingSharp.Search
             return GetRetranslator(retranslatorId.ToString(), PropertyElement.sys_id, flags);
         }
 
+        public Task<Retranslator> GetRetranslatorByName(string name, long flags = 1)
+        {
+            return GetRetranslator(name, PropertyElement.sys_name, flags);
+        }
+
         public async Task<WlnObject[]> GetObjects(string mask = "*",
             PropertyElement propName = PropertyElement.sys_name, long flags = 1,
             uint force = 1, uint from = 0, uint to = 0)
