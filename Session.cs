@@ -1,9 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using WialonHostingSharp.Search;
 
 namespace WialonHostingSharp
 {
-    public class Session : Connection
+    public class Session : Connection, IDisposable
     {
         public Session(string host, string id) : base(host)
         {
@@ -26,5 +27,12 @@ namespace WialonHostingSharp
         {
             return SessionManager.Logout(this);
         }
+
+        public void Dispose()
+        {
+            this.Logout().Wait();
+        }
+
+        public SearchService CreateSearchService() => new SearchService(this);
     }
 }
