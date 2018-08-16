@@ -38,6 +38,11 @@ namespace WialonHostingSharp.Search
             return result.Items;
         }
 
+        public Task<User> GetUserById(int id, long flags = 1)
+        {
+            return GetUser(id.ToString(), PropertyElement.sys_id, flags);
+        }
+
         public Task<Retranslator> GetRetranslatorById(int retranslatorId, long flags = 1)
         {
             return GetRetranslator(retranslatorId.ToString(), PropertyElement.sys_id, flags);
