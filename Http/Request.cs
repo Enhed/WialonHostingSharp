@@ -675,4 +675,63 @@ namespace WialonHostingSharp.Http
             RelativeOdometer
         }
     }
+
+        public sealed class TokenListRequest : Request<Token[]>
+    {
+        public TokenListRequest(Session connection, Params parameters)
+            : base(connection, parameters)
+        {
+        }
+
+        public TokenListRequest(Session connection)
+            : base(connection, new Params())
+        {
+        }
+
+        public override string Method => "token/list";
+
+        public sealed class Params : RequestParams
+        {
+            [JsonProperty("userId", NullValueHandling = NullValueHandling.Ignore)]
+            public string UserId;
+        }
+    }
+
+    public sealed class Token
+    {
+        [JsonProperty("h")]
+        public string Value;
+
+        [JsonProperty("app")]
+        public string Application;
+
+        [JsonProperty("at")]
+        [JsonConverter(typeof(UnixDateTimeConverter))]
+        public DateTime ActivationUtcDate;
+
+        [JsonProperty("ct")]
+        [JsonConverter(typeof(UnixDateTimeConverter))]
+        public DateTime CreatedUtcDate;
+
+        [JsonProperty("dur")]
+        public uint DurationSeconds;
+
+        [JsonProperty("fl")]
+        public long Flags;
+
+        [JsonProperty("items")]
+        public long[] AllowItemsId;
+
+        [JsonProperty("p")]
+        public string CustomParameters;
+
+        [JsonIgnore]
+        public DateTime ExpiredUtcDate => CreatedUtcDate.AddSeconds(DurationSeconds);
+
+        [JsonIgnore]
+        public TimeSpan DurationTime => TimeSpan.FromSeconds(DurationSeconds);
+
+        [JsonIgnore]
+        public bool IsExpired => ExpiredUtcDate.ToLocalTime() > DateTime.Now;
+    }
 }
