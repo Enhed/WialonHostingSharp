@@ -676,7 +676,7 @@ namespace WialonHostingSharp.Http
         }
     }
 
-        public sealed class TokenListRequest : Request<Token[]>
+    public sealed class TokenListRequest : Request<Token[]>
     {
         public TokenListRequest(Session connection, Params parameters)
             : base(connection, parameters)
@@ -732,6 +732,6 @@ namespace WialonHostingSharp.Http
         public TimeSpan DurationTime => TimeSpan.FromSeconds(DurationSeconds);
 
         [JsonIgnore]
-        public bool IsExpired => ExpiredUtcDate.ToLocalTime() > DateTime.Now;
+        public bool IsExpired => DurationSeconds == 0 ? false : ExpiredUtcDate.ToLocalTime() > DateTime.Now;
     }
 }
