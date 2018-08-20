@@ -80,7 +80,9 @@ namespace WialonHostingSharp.Search
         {
             var objs = await GetObjects(mask, propName, flags, force, from, to);
 
-            return objs?.Length != 1
+            if(objs.Length == 0) return null;
+
+            return objs?.Length > 1
                 ? throw new AggregateException($"Mask [{mask}] get x{objs?.Length ?? -1} elements")
                 : objs[0].Do(o => o.Session = session);
         }
