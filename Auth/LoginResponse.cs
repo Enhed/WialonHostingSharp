@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using WialonHostingSharp.Http;
 
 namespace WialonHostingSharp.Auth
 {
@@ -6,5 +7,8 @@ namespace WialonHostingSharp.Auth
     {
         [JsonProperty("eid")]
         public string SessionId;
+
+        [JsonProperty("token")]
+        public Token Token;
     }
 }
