@@ -8,7 +8,7 @@ namespace WialonHostingSharp.Auth
         [JsonProperty("eid")]
         public string SessionId;
 
-        [JsonProperty("token")]
-        public Token Token;
+        // [JsonProperty("token")]
+        // public Token Token;
     }
 }
